@@ -1,6 +1,6 @@
 ## 目录结构
 ```
-Zmj
+ml-framework
  |-- data  # 数据模型文件夹
  |    |-- dataset   # 数据集文件夹
  |    |    |-- zhihu0605v4.xlsx # 支护数据v5
@@ -24,11 +24,16 @@ Zmj
  |-- test.py    # 无关代码
 ```
 
-环境
+# 环境
 ```bash
 conda create -n ml-framework python=3.11
 pip install -r requirements.txt
 ```
 
-注意
-测量参数（X） 不允许为不存在（-2） ；预测参数无要求
+# 注意
+
+-1 表示缺失；-2 表示不存在
+
+数值型一定可以成功预测，除非违反逻辑
+
+字符型预测视情况可以预测出不存在（-2）

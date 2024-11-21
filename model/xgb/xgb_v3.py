@@ -8,7 +8,7 @@ import pickle
 
 from xgboost import XGBClassifier, XGBRegressor
 
-from utils.config import *
+from utils.config_test import *
 from utils.utils import rmse, mkdir
 
 # # 解决中文乱码问题
@@ -40,14 +40,14 @@ class XGB:
         self.yucecanshu_str = list(yucecanshu_clt.keys())
         self.yucecanshu_oth_val = yucecanshu_oth_val
 
-    # 获取岩性编码
-    def _get_yanxing(self, description: str, yanxing_lst: list) -> int:
+    # 获取二进制编码
+    def _bin_encode(self, description: str, lst: list) -> int:
         description = str(description)
         if (description == str(missing) or description == str(none_exist)):
             return int(description)
         ans = 0
-        for _ in range(len(yanxing_lst)):
-            if description.find(yanxing_lst[_]) != -1:
+        for _ in range(len(lst)):
+            if description.find(lst[_]) != -1:
                 ans |= (1 << _)
         assert ans != 0
         return missing if ans == 0 else ans
@@ -58,10 +58,9 @@ class XGB:
         for _ in self.celiangcanshu:
             if (self.celiangcanshu_range[_]):
                 if (_.endswith('岩性')):
-                    code = self._get_yanxing(x[_], self.celiangcanshu_range[_])
+                    code = self._bin_encode(x[_], self.celiangcanshu_range[_])
                     x_lst.append(code)
                 else:
-                    assert x[_] != -2
                     code = self.celiangcanshu_range[_].index(x[_]) if x[_] in self.celiangcanshu_range[_] else -1
                     x_lst.append(code)
             else:
@@ -69,35 +68,35 @@ class XGB:
         return x_lst
 
     # 初始化测量参数
-    def _add_x(self, zhihu_data: pd.DataFrame) -> None:
+    def _add_x(self, data: pd.DataFrame) -> None:
         x = []
-        for _r in range(zhihu_data.shape[0]):
+        for _r in range(data.shape[0]):
             _x = {}
             for _c in self.celiangcanshu:
-                _x[_c] = zhihu_data.loc[_r, _c]
+                _x[_c] = data.loc[_r, _c]
             x.append(self._symbolize_x(_x))
         self.x = np.array(x)
 
     # 初始化预测参数
-    def _add_y(self, zhihu_data: pd.DataFrame) -> None:
+    def _add_y(self, data: pd.DataFrame) -> None:
         for _ in self.yucecanshu:
             lst = []
             if (_ in self.yucecanshu_str):
-               for _type in zhihu_data[_]:
+               for _type in data[_]:
                     code = self.yucecanshu_range[_].index(_type) if _type in self.yucecanshu_range[_] else missing   # 缺失
                     lst.append(code)
                # print(_, list(set(lst)), max(list(set(lst))))
                # assert len(list(set(lst))) == max(list(set(lst))) + 1
             else:
-               lst = zhihu_data[_]
+               lst = data[_]
             self.y[_] = np.array(lst)
 
     # 初始化数据
     def init_data(self, dataset_name: str) -> None:
         dataset_path = self.data_path + "dataset/" + dataset_name + '.xlsx'
-        zhihu_data = pd.read_excel(io=dataset_path)
-        self._add_x(zhihu_data)
-        self._add_y(zhihu_data)
+        data = pd.read_excel(io=dataset_path)
+        self._add_x(data)
+        self._add_y(data)
 
     # 训练
     def train(self, task_id: str) -> str:
@@ -165,9 +164,9 @@ class XGB:
         print(x)
         res = {}
         # 支护预测
-        eps_zhihu = 0.001
+        eps = 0.001
         xgb_dict = pickle.load(open(model_path, 'rb'))
-        # 处理字符串型参数与受其影响的数值型参数
+        # 处理字符串型参数与受影响的数值型参数
         for _type, _param_lst in self.yucecanshu_clt.items():
             # 处理类型
             xgb = xgb_dict[_type]
@@ -185,10 +184,10 @@ class XGB:
                 if (val in val_range):
                     res[_param] = val
                 elif (_param.endswith('距')):
-                    val *= 1 + eps_zhihu
+                    val *= 1 + eps
                     res[_param] = val_range[max(bisect.bisect_left(val_range, val) - 1, 0)]
                 else:
-                    val *= 1 - eps_zhihu
+                    val *= 1 - eps
                     res[_param] = val_range[min(bisect.bisect_left(val_range, val), len(val_range) - 1)]
         # 处理不受字符串型参数影响的数值型参数
         for _param in self.yucecanshu_oth_val:
@@ -200,10 +199,10 @@ class XGB:
             if (val in val_range):
                 res[_param] = val
             elif (_param.endswith('距')):
-                val *= 1 + eps_zhihu
+                val *= 1 + eps
                 res[_param] = val_range[max(bisect.bisect_left(val_range, val) - 1, 0)]
             else:
-                val *= 1 - eps_zhihu
+                val *= 1 - eps
                 res[_param] = val_range[min(bisect.bisect_left(val_range, val), len(val_range) - 1)]
         # 处理参数不存在的情况
         for _type, _param_lst in self.yucecanshu_clt.items():

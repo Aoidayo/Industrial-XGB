@@ -50,7 +50,6 @@ if __name__ == '__main__':
          "断面形状": '矩形', "巷道毛断面宽度": 3.7, "巷道毛断面高度": 2.4, "煤柱宽度": -1, "煤层厚度": 1.8}
     print(x)
     xgb = XGB(data_prefix)
-    # print(xgb.predict(x, str(json['id'])))
     xgb.predict(x, 'xgb')
 
     # app.run(host='0.0.0.0', port=20010, debug=True)
