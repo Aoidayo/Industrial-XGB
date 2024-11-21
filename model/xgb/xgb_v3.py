@@ -1,7 +1,5 @@
 import bisect
 import os
-import random
-import shutil
 
 # from matplotlib import pyplot as plt
 import numpy as np
@@ -11,6 +9,7 @@ import pickle
 from xgboost import XGBClassifier, XGBRegressor
 
 from utils.config import *
+from utils.utils import rmse, mkdir
 
 # # 解决中文乱码问题
 # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 指定默认字体：解决plot不能显示中文问题
@@ -21,17 +20,6 @@ data_prefix = "./data/"
 missing = -1
 none_exist = -2
 
-def rmse(prediction, target):
-   # rmse 计算
-   assert len(prediction) == len(target)
-   alpha = 1.0 / prediction.shape[0]
-   return np.sqrt(np.sum(np.square(prediction - target)) * alpha)
-
-def mkdir(dir_path):
-    # 新建目录
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-
 class XGB:
     # 初始化
     def __init__(self, data_path):
@@ -39,16 +27,18 @@ class XGB:
         self.y = {}
         self.data_path = data_path
         # 测量参数
-        self.celiangcanshu = celiangcanshu
-        self.l_celiangcanshu = len(celiangcanshu)
+        self.celiangcanshu = list(celiangcanshu_range.keys())
+        self.l_celiangcanshu = len(self.celiangcanshu)
         self.celiangcanshu_range = celiangcanshu_range
         # 预测参数
-        self.yucecanshu = yucecanshu
-        self.l_yucecanshu = len(yucecanshu)
+        self.yucecanshu = list(yucecanshu_range.keys())
+        self.l_yucecanshu = len(self.yucecanshu)
         self.yucecanshu_range = yucecanshu_range
-        self.yucecanshu_str = list(yucecanshu_clt.keys())
-        # 转换
+
         self.yucecanshu2py = yucecanshu2py
+        self.yucecanshu_clt = yucecanshu_clt
+        self.yucecanshu_str = list(yucecanshu_clt.keys())
+        self.yucecanshu_oth_val = yucecanshu_oth_val
 
     # 获取岩性编码
     def _get_yanxing(self, description: str, yanxing_lst: list) -> int:
@@ -121,25 +111,25 @@ class XGB:
         # 模型参数
         params_classifier_adjust = {'max_depth': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 'min_child_weight': [1, 2, 3, 4, 5, 6]}
         params_classifier_fixed = {'learning_rate': 0.1, 'n_estimators': 500, 'max_depth': 2,
-                                   'objective': 'multi:softmax  num_class=n'}  # reg:squarederror
+                                   'objective': 'multi:softmax'}  # reg:squarederror
         params_regression_adjust = {'reg_alpha': np.arange(0, 3, 0.5), 'reg_lambda': np.arange(0, 3, 0.5)}
         params_regression_fixed = {'learning_rate': 0.1, 'n_estimators': 2000, 'max_depth': 4,
                              'objective': 'reg:squarederror'}
         # 分参数拟合模型
         xgb_dict, choose_dict = {}, {}
         for _ in self.yucecanshu:
-            print(_)
             if (_ in self.yucecanshu_str):
                 choose = self.y[_] != missing
                 _x = self.x[choose, :]
                 _y = self.y[_][choose]
-                xgb = XGBClassifier(**params_classifier_fixed).fit(_x, _y)
+                print(_)
+                xgb = XGBClassifier(**params_classifier_fixed, num_class=len(self.yucecanshu_range[_])).fit(_x, _y)
             else:
                 # best_params = self._model_adjust_parameters(_x, _y, params_regression_adjust, params_regression_fixed, yucecanshu[_])
                 choose = self.y[_] >= 0
                 _x = self.x[choose, :]
                 _y = self.y[_][choose]
-                # print(_x, _y)
+                print(_)
                 xgb = XGBRegressor(**params_regression_fixed).fit(_x, _y)
             xgb_dict[_], choose_dict[_] = xgb, choose
         # 保存模型
@@ -165,6 +155,7 @@ class XGB:
         # self._draw_importance(params_importance, impGraph_path)
         # log_info.append("<img style='width: 100%; height: 100%' src='http://127.0.0.1:9000/ruoyi/aiplat/importance/{}'>"
         #               .format(impGraph_path[impGraph_path.rfind('/') + 1:]))
+        print('\n'.join(log_info))
         return ' <br/>'.join(log_info)
 
     # 预测
@@ -176,8 +167,8 @@ class XGB:
         # 支护预测
         eps_zhihu = 0.001
         xgb_dict = pickle.load(open(model_path, 'rb'))
-        # 假设所有数值型参数都存在
-        for _type, _param_lst in yucecanshu_clt.items():
+        # 处理字符串型参数与受其影响的数值型参数
+        for _type, _param_lst in self.yucecanshu_clt.items():
             # 处理类型
             xgb = xgb_dict[_type]
             val = xgb.predict(x)[0]
@@ -193,18 +184,29 @@ class XGB:
                 print(_param, val)
                 if (val in val_range):
                     res[_param] = val
-                elif (_param.endswith('锚索间距') or _param.endswith('锚索排距')):
-                    # 1.锚索间距/排距 = 锚杆间距/排距 * 2 （锚杆存在的条件下）
-                    res[_param] = res[_param.replace('索', '杆')] << 1
                 elif (_param.endswith('距')):
                     val *= 1 + eps_zhihu
                     res[_param] = val_range[max(bisect.bisect_left(val_range, val) - 1, 0)]
                 else:
                     val *= 1 - eps_zhihu
                     res[_param] = val_range[min(bisect.bisect_left(val_range, val), len(val_range) - 1)]
-
+        # 处理不受字符串型参数影响的数值型参数
+        for _param in self.yucecanshu_oth_val:
+            xgb = xgb_dict[_param]
+            val = xgb.predict(x)[0]
+            val_range = self.yucecanshu_range[_param]
+            assert val >= 0
+            print(_param, val)
+            if (val in val_range):
+                res[_param] = val
+            elif (_param.endswith('距')):
+                val *= 1 + eps_zhihu
+                res[_param] = val_range[max(bisect.bisect_left(val_range, val) - 1, 0)]
+            else:
+                val *= 1 - eps_zhihu
+                res[_param] = val_range[min(bisect.bisect_left(val_range, val), len(val_range) - 1)]
         # 处理参数不存在的情况
-        for _type, _param_lst in yucecanshu_clt.items():
+        for _type, _param_lst in self.yucecanshu_clt.items():
             if (res[_type] == none_exist):
                 for _param in _param_lst:
                     res[_param] = -2

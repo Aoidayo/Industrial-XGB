@@ -1,8 +1,17 @@
-# 测量参数 -zh
-celiangcanshu = ["巷道用途", "巷道埋深", "直接顶岩性", "直接顶厚度", "老顶岩性", "老顶厚度", "断面形状", "巷道毛断面宽度", "巷道毛断面高度", "煤柱宽度", "煤层厚度"]
-# 测量参数 -py
-celiangcanshu_py = ["hangdaoyongtu", "hangdaomaishen", "zhijiedingyanxing", "zhijiedinghoudu", "laodingyanxing",
-                    "laodinghoudu", "duanmianxingzhuang", "hangdaomaoduanmiankuandu", "hangdaomaoduanmiangaodu", "meizhukuandu", "meicenghoudu"]
+# 测量参数 -2zh
+celiangcanshu2zh = {
+    "hangdaoyongtu": "巷道用途",
+    "hangdaomaishen": "巷道埋深",
+    "zhijiedingyanxing": "直接顶岩性",
+    "zhijiedinghoudu": "直接顶厚度",
+    "laodingyanxing": "老顶岩性",
+    "laodinghoudu": "老顶厚度",
+    "duanmianxingzhuang": "断面形状",
+    "hangdaomaoduanmiankuandu": "巷道毛断面宽度",
+    "hangdaomaoduanmiangaodu": "巷道毛断面高度",
+    "meizhukuandu": "煤柱宽度",
+    "meicenghoudu": "煤层厚度"
+}
 # 测量参数 -range
 celiangcanshu_range = {
     '巷道用途':     ['下山', '回采巷道', '回风大巷', '胶带大巷', '胶带运输巷', '石门', '轨道运输巷', '开切眼', '开拓巷道', '上山', '轨道大巷', '撤架巷道回风大巷', '撤架巷道'],
@@ -18,65 +27,86 @@ celiangcanshu_range = {
     "煤层厚度":     [],
 }
 
-# 预测参数 -zh
-# yucecanshu_head = ["顶", "工作面帮", "煤柱帮"]
-# yucecanshu_tail = ["锚杆类型", "锚杆杆体强度", "锚杆直径", "锚杆长度", "锚杆钻孔直径", "锚杆间距", "锚杆排距", "锚杆钢带类型", "锚杆钢带宽度", "锚杆钢带长度", "锚杆钢带厚度",
-#                    "锚索类型", "锚索杆体强度", "锚索直径", "锚索长度", "锚索钻孔直径", "锚索间距", "锚索排距", "锚索钢带类型", "锚索钢带宽度", "锚索钢带长度", "锚索钢带厚度",
-#                    "网类型",   "网铁丝直径"]
-# yucecanshu_other = ["支护形式", "钢棚型号", "钢棚间距", "喷浆材料", "喷浆厚度"]
-yucecanshu = ['支护形式',
-
-              '顶锚杆类型', '顶锚杆杆体强度', '顶锚杆直径', '顶锚杆长度', '顶锚杆钻孔直径', '顶锚杆间距', '顶锚杆排距',
-              '顶锚杆钢带类型', '顶锚杆钢带宽度', '顶锚杆钢带长度', '顶锚杆钢带厚度',
-              '顶锚索类型', '顶锚索杆体强度', '顶锚索直径', '顶锚索长度', '顶锚索钻孔直径', '顶锚索间距', '顶锚索排距',
-              '顶锚索钢带类型', '顶锚索钢带宽度', '顶锚索钢带长度', '顶锚索钢带厚度',
-              '顶板网类型', '顶板网铁丝直径',
-
-              '工作面帮锚杆类型', '工作面帮锚杆杆体强度', '工作面帮锚杆直径', '工作面帮锚杆长度', '工作面帮锚杆钻孔直径', '工作面帮锚杆间距', '工作面帮锚杆排距',
-              '工作面帮锚杆钢带类型', '工作面帮锚杆钢带宽度', '工作面帮锚杆钢带长度', '工作面帮锚杆钢带厚度',
-              '工作面帮锚索类型', '工作面帮锚索杆体强度', '工作面帮锚索直径', '工作面帮锚索长度', '工作面帮锚索钻孔直径', '工作面帮锚索间距', '工作面帮锚索排距',
-              '工作面帮锚索钢带类型', '工作面帮锚索钢带宽度', '工作面帮锚索钢带长度', '工作面帮锚索钢带厚度',
-              '工作面帮网类型', '工作面帮网铁丝直径',
-
-              '煤柱帮锚杆类型', '煤柱帮锚杆杆体强度', '煤柱帮锚杆直径', '煤柱帮锚杆长度', '煤柱帮锚杆钻孔直径', '煤柱帮锚杆间距', '煤柱帮锚杆排距',
-              '煤柱帮锚杆钢带类型', '煤柱帮锚杆钢带宽度', '煤柱帮锚杆钢带长度', '煤柱帮锚杆钢带厚度',
-              '煤柱帮锚索类型', '煤柱帮锚索杆体强度', '煤柱帮锚索直径', '煤柱帮锚索长度', '煤柱帮锚索钻孔直径', '煤柱帮锚索间距', '煤柱帮锚索排距',
-              '煤柱帮锚索钢带类型', '煤柱帮锚索钢带宽度', '煤柱帮锚索钢带长度', '煤柱帮锚索钢带厚度',
-              '煤柱帮网类型', '煤柱帮网铁丝直径',
-
-              '钢棚型号', '钢棚间距',
-              '喷浆材料', '喷浆厚度']
-# 预测参数 -py
-# yucecanshu_head_py = ["ding", "gongzuomianbang", "meizhubang"]
-# yucecanshu_tail_py = ["maoganleixing", "maogangantiqiangdu", "maoganzhijing", "maoganchangdu", "maoganzuankongzhijing", "maoganjianju", "maoganpaiju",
-#                       "maogangangdaileixing", "maogangangdaikuandu", "maogangangdaichangdu", "maogangangdaihoudu",
-#                       "maosuoleixing", "maosuogantiqiangdu", "maosuozhijing", "maosuochangdu", "maosuozuankongzhijing", "maosuojianju", "maosuopaiju",
-#                       "maosuogangdaileixing", "maosuogangdaikuandu", "maosuogangdaichangdu", "maosuogangdaihoudu",
-#                       "wangleixing", "wangtiesizhijing"]
-# yucecanshu_other_py = ['zhihuxingshi', 'gangpengxinghao', 'gangpengjianju', 'penjiangcailiao', 'penjianghoudu']
-yucecanshu_py = [ 'zhihuxingshi',
-
-                  'dingmaoganleixing', 'dingmaogangantiqiangdu', 'dingmaoganzhijing', 'dingmaoganchangdu', 'dingmaoganzuankongzhijing', 'dingmaoganjianju', 'dingmaoganpaiju',
-                  'dingmaogangangdaileixing', 'dingmaogangangdaikuandu', 'dingmaogangangdaichangdu', 'dingmaogangangdaihoudu',
-                  'dingmaosuoleixing', 'dingmaosuogantiqiangdu', 'dingmaosuozhijing', 'dingmaosuochangdu', 'dingmaosuozuankongzhijing', 'dingmaosuojianju', 'dingmaosuopaiju',
-                  'dingmaosuogangdaileixing', 'dingmaosuogangdaikuandu', 'dingmaosuogangdaichangdu', 'dingmaosuogangdaihoudu',
-                  'dingbanwangleixing', 'dingbanwangtiesizhijing',
-
-                  'gongzuomianbangmaoganleixing', 'gongzuomianbangmaogangantiqiangdu', 'gongzuomianbangmaoganzhijing', 'gongzuomianbangmaoganchangdu', 'gongzuomianbangmaoganzuankongzhijing', 'gongzuomianbangmaoganjianju', 'gongzuomianbangmaoganpaiju',
-                  'gongzuomianbangmaogangangdaileixing', 'gongzuomianbangmaogangangdaikuandu', 'gongzuomianbangmaogangangdaichangdu', 'gongzuomianbangmaogangangdaihoudu',
-                  'gongzuomianbangmaosuoleixing', 'gongzuomianbangmaosuogantiqiangdu', 'gongzuomianbangmaosuozhijing', 'gongzuomianbangmaosuochangdu', 'gongzuomianbangmaosuozuankongzhijing', 'gongzuomianbangmaosuojianju', 'gongzuomianbangmaosuopaiju',
-                  'gongzuomianbangmaosuogangdaileixing', 'gongzuomianbangmaosuogangdaikuandu', 'gongzuomianbangmaosuogangdaichangdu', 'gongzuomianbangmaosuogangdaihoudu',
-                  'gongzuomianbangwangleixing', 'gongzuomianbangwangtiesizhijing',
-
-                  'meizhubangmaoganleixing', 'meizhubangmaogangantiqiangdu', 'meizhubangmaoganzhijing', 'meizhubangmaoganchangdu', 'meizhubangmaoganzuankongzhijing', 'meizhubangmaoganjianju', 'meizhubangmaoganpaiju',
-                  'meizhubangmaogangangdaileixing', 'meizhubangmaogangangdaikuandu', 'meizhubangmaogangangdaichangdu', 'meizhubangmaogangangdaihoudu',
-                  'meizhubangmaosuoleixing', 'meizhubangmaosuogantiqiangdu', 'meizhubangmaosuozhijing', 'meizhubangmaosuochangdu', 'meizhubangmaosuozuankongzhijing', 'meizhubangmaosuojianju', 'meizhubangmaosuopaiju',
-                  'meizhubangmaosuogangdaileixing', 'meizhubangmaosuogangdaikuandu', 'meizhubangmaosuogangdaichangdu', 'meizhubangmaosuogangdaihoudu',
-                  'meizhubangwangleixing', 'meizhubangwangtiesizhijing',
-
-                  'gangpengxinghao', 'gangpengjianju',
-                  'penjiangcailiao', 'penjianghoudu'
-]
+# 预测参数 -2py
+yucecanshu2py = {
+    "支护形式": "zhihuxingshi",
+    "顶锚杆类型": "dingmaoganleixing",
+    "顶锚杆杆体强度": "dingmaogangantiqiangdu",
+    "顶锚杆直径": "dingmaoganzhijing",
+    "顶锚杆长度": "dingmaoganchangdu",
+    "顶锚杆钻孔直径": "dingmaoganzuankongzhijing",
+    "顶锚杆间距": "dingmaoganjianju",
+    "顶锚杆排距": "dingmaoganpaiju",
+    "顶锚杆钢带类型": "dingmaogangangdaileixing",
+    "顶锚杆钢带宽度": "dingmaogangangdaikuandu",
+    "顶锚杆钢带长度": "dingmaogangangdaichangdu",
+    "顶锚杆钢带厚度": "dingmaogangangdaihoudu",
+    "顶锚索类型": "dingmaosuoleixing",
+    "顶锚索杆体强度": "dingmaosuogantiqiangdu",
+    "顶锚索直径": "dingmaosuozhijing",
+    "顶锚索长度": "dingmaosuochangdu",
+    "顶锚索钻孔直径": "dingmaosuozuankongzhijing",
+    "顶锚索间距": "dingmaosuojianju",
+    "顶锚索排距": "dingmaosuopaiju",
+    "顶锚索钢带类型": "dingmaosuogangdaileixing",
+    "顶锚索钢带宽度": "dingmaosuogangdaikuandu",
+    "顶锚索钢带长度": "dingmaosuogangdaichangdu",
+    "顶锚索钢带厚度": "dingmaosuogangdaihoudu",
+    "顶板网类型": "dingbanwangleixing",
+    "顶板网铁丝直径": "dingbanwangtiesizhijing",
+    "工作面帮锚杆类型": "gongzuomianbangmaoganleixing",
+    "工作面帮锚杆杆体强度": "gongzuomianbangmaogangantiqiangdu",
+    "工作面帮锚杆直径": "gongzuomianbangmaoganzhijing",
+    "工作面帮锚杆长度": "gongzuomianbangmaoganchangdu",
+    "工作面帮锚杆钻孔直径": "gongzuomianbangmaoganzuankongzhijing",
+    "工作面帮锚杆间距": "gongzuomianbangmaoganjianju",
+    "工作面帮锚杆排距": "gongzuomianbangmaoganpaiju",
+    "工作面帮锚杆钢带类型": "gongzuomianbangmaogangangdaileixing",
+    "工作面帮锚杆钢带宽度": "gongzuomianbangmaogangangdaikuandu",
+    "工作面帮锚杆钢带长度": "gongzuomianbangmaogangangdaichangdu",
+    "工作面帮锚杆钢带厚度": "gongzuomianbangmaogangangdaihoudu",
+    "工作面帮锚索类型": "gongzuomianbangmaosuoleixing",
+    "工作面帮锚索杆体强度": "gongzuomianbangmaosuogantiqiangdu",
+    "工作面帮锚索直径": "gongzuomianbangmaosuozhijing",
+    "工作面帮锚索长度": "gongzuomianbangmaosuochangdu",
+    "工作面帮锚索钻孔直径": "gongzuomianbangmaosuozuankongzhijing",
+    "工作面帮锚索间距": "gongzuomianbangmaosuojianju",
+    "工作面帮锚索排距": "gongzuomianbangmaosuopaiju",
+    "工作面帮锚索钢带类型": "gongzuomianbangmaosuogangdaileixing",
+    "工作面帮锚索钢带宽度": "gongzuomianbangmaosuogangdaikuandu",
+    "工作面帮锚索钢带长度": "gongzuomianbangmaosuogangdaichangdu",
+    "工作面帮锚索钢带厚度": "gongzuomianbangmaosuogangdaihoudu",
+    "工作面帮网类型": "gongzuomianbangwangleixing",
+    "工作面帮网铁丝直径": "gongzuomianbangwangtiesizhijing",
+    "煤柱帮锚杆类型": "meizhubangmaoganleixing",
+    "煤柱帮锚杆杆体强度": "meizhubangmaogangantiqiangdu",
+    "煤柱帮锚杆直径": "meizhubangmaoganzhijing",
+    "煤柱帮锚杆长度": "meizhubangmaoganchangdu",
+    "煤柱帮锚杆钻孔直径": "meizhubangmaoganzuankongzhijing",
+    "煤柱帮锚杆间距": "meizhubangmaoganjianju",
+    "煤柱帮锚杆排距": "meizhubangmaoganpaiju",
+    "煤柱帮锚杆钢带类型": "meizhubangmaogangangdaileixing",
+    "煤柱帮锚杆钢带宽度": "meizhubangmaogangangdaikuandu",
+    "煤柱帮锚杆钢带长度": "meizhubangmaogangangdaichangdu",
+    "煤柱帮锚杆钢带厚度": "meizhubangmaogangangdaihoudu",
+    "煤柱帮锚索类型": "meizhubangmaosuoleixing",
+    "煤柱帮锚索杆体强度": "meizhubangmaosuogantiqiangdu",
+    "煤柱帮锚索直径": "meizhubangmaosuozhijing",
+    "煤柱帮锚索长度": "meizhubangmaosuochangdu",
+    "煤柱帮锚索钻孔直径": "meizhubangmaosuozuankongzhijing",
+    "煤柱帮锚索间距": "meizhubangmaosuojianju",
+    "煤柱帮锚索排距": "meizhubangmaosuopaiju",
+    "煤柱帮锚索钢带类型": "meizhubangmaosuogangdaileixing",
+    "煤柱帮锚索钢带宽度": "meizhubangmaosuogangdaikuandu",
+    "煤柱帮锚索钢带长度": "meizhubangmaosuogangdaichangdu",
+    "煤柱帮锚索钢带厚度": "meizhubangmaosuogangdaihoudu",
+    "煤柱帮网类型": "meizhubangwangleixing",
+    "煤柱帮网铁丝直径": "meizhubangwangtiesizhijing",
+    "钢棚型号": "gangpengxinghao",
+    "钢棚间距": "gangpengjianju",
+    "喷浆材料": "penjiangcailiao",
+    "喷浆厚度": "penjianghoudu"
+}
 # 预测参数 -range
 yucecanshu_range = {
                      "支护形式": ['锚网索带喷注棚', '锚索', '棚', '锚网带', '锚索柱', '锚网索带', '锚网索带喷棚', '锚网索注', '索', '锚网索带棚', '锚网带喷', '锚网索带注', '锚网索喷', '柱', '锚带喷棚', '锚索带柱', '锚索带', '锚网喷', '锚网索带柱', '锚网索带喷', '锚网', '锚网带棚', '锚索带喷', '砌', '喷棚砌', '锚网索', '锚索带棚', '锚网索喷棚'],
@@ -98,8 +128,8 @@ yucecanshu_range = {
                      "顶锚索直径": [17.8, 21.6, 21.8],
                      "顶锚索长度": [_ for _ in range(1500, 12100, 100)],
                      "顶锚索钻孔直径": [28, 30, 32],
-                     "顶锚索间距": [],
-                     "顶锚索排距": [],
+                     "顶锚索间距": [_ * 2 for _ in range(600, 1300, 50)],
+                     "顶锚索排距": [_ * 2 for _ in range(600, 1300, 50)],
                      "顶锚索钢带类型": [-2, 'JW型', 'T形', 'W钢带', 'W型', '钢筋梯'],
                      "顶锚索钢带宽度": [_ for _ in range(150, 405, 5)],
                      "顶锚索钢带长度": [_ for _ in range(400, 5550, 50)],
@@ -125,8 +155,8 @@ yucecanshu_range = {
                      "工作面帮锚索直径": [17.8, 21.6, 21.8],
                      "工作面帮锚索长度": [_ for _ in range(1500, 12100, 100)],
                      "工作面帮锚索钻孔直径": [28, 30, 32],
-                     "工作面帮锚索间距": [],
-                     "工作面帮锚索排距": [],
+                     "工作面帮锚索间距": [_ * 2 for _ in range(600, 1300, 50)],
+                     "工作面帮锚索排距": [_ * 2 for _ in range(600, 1300, 50)],
                      "工作面帮锚索钢带类型": [-2, 'W型', '钢筋梯'],
                      "工作面帮锚索钢带宽度": [_ for _ in range(150, 405, 5)],
                      "工作面帮锚索钢带长度": [_ for _ in range(400, 5550, 50)],
@@ -152,8 +182,8 @@ yucecanshu_range = {
                      "煤柱帮锚索直径": [17.8, 21.6, 21.8],
                      "煤柱帮锚索长度": [_ for _ in range(1500, 12100, 100)],
                      "煤柱帮锚索钻孔直径": [28, 30, 32],
-                     "煤柱帮锚索间距": [],
-                     "煤柱帮锚索排距": [],
+                     "煤柱帮锚索间距": [_ * 2 for _ in range(600, 1300, 50)],
+                     "煤柱帮锚索排距": [_ * 2 for _ in range(600, 1300, 50)],
                      "煤柱帮锚索钢带类型": [-2, 'W型', '钢筋梯'],
                      "煤柱帮锚索钢带宽度": [_ for _ in range(150, 405, 5)],
                      "煤柱帮锚索钢带长度": [_ for _ in range(400, 5550, 50)],
@@ -170,7 +200,6 @@ yucecanshu_range = {
 }
 
 # others
-yucecanshu2py = {'支护形式': 'zhihuxingshi', '顶锚杆类型': 'dingmaoganleixing', '顶锚杆杆体强度': 'dingmaogangantiqiangdu', '顶锚杆直径': 'dingmaoganzhijing', '顶锚杆长度': 'dingmaoganchangdu', '顶锚杆钻孔直径': 'dingmaoganzuankongzhijing', '顶锚杆间距': 'dingmaoganjianju', '顶锚杆排距': 'dingmaoganpaiju', '顶锚杆钢带类型': 'dingmaogangangdaileixing', '顶锚杆钢带宽度': 'dingmaogangangdaikuandu', '顶锚杆钢带长度': 'dingmaogangangdaichangdu', '顶锚杆钢带厚度': 'dingmaogangangdaihoudu', '顶锚索类型': 'dingmaosuoleixing', '顶锚索杆体强度': 'dingmaosuogantiqiangdu', '顶锚索直径': 'dingmaosuozhijing', '顶锚索长度': 'dingmaosuochangdu', '顶锚索钻孔直径': 'dingmaosuozuankongzhijing', '顶锚索间距': 'dingmaosuojianju', '顶锚索排距': 'dingmaosuopaiju', '顶锚索钢带类型': 'dingmaosuogangdaileixing', '顶锚索钢带宽度': 'dingmaosuogangdaikuandu', '顶锚索钢带长度': 'dingmaosuogangdaichangdu', '顶锚索钢带厚度': 'dingmaosuogangdaihoudu', '顶板网类型': 'dingbanwangleixing', '顶板网铁丝直径': 'dingbanwangtiesizhijing', '工作面帮锚杆类型': 'gongzuomianbangmaoganleixing', '工作面帮锚杆杆体强度': 'gongzuomianbangmaogangantiqiangdu', '工作面帮锚杆直径': 'gongzuomianbangmaoganzhijing', '工作面帮锚杆长度': 'gongzuomianbangmaoganchangdu', '工作面帮锚杆钻孔直径': 'gongzuomianbangmaoganzuankongzhijing', '工作面帮锚杆间距': 'gongzuomianbangmaoganjianju', '工作面帮锚杆排距': 'gongzuomianbangmaoganpaiju', '工作面帮锚杆钢带类型': 'gongzuomianbangmaogangangdaileixing', '工作面帮锚杆钢带宽度': 'gongzuomianbangmaogangangdaikuandu', '工作面帮锚杆钢带长度': 'gongzuomianbangmaogangangdaichangdu', '工作面帮锚杆钢带厚度': 'gongzuomianbangmaogangangdaihoudu', '工作面帮锚索类型': 'gongzuomianbangmaosuoleixing', '工作面帮锚索杆体强度': 'gongzuomianbangmaosuogantiqiangdu', '工作面帮锚索直径': 'gongzuomianbangmaosuozhijing', '工作面帮锚索长度': 'gongzuomianbangmaosuochangdu', '工作面帮锚索钻孔直径': 'gongzuomianbangmaosuozuankongzhijing', '工作面帮锚索间距': 'gongzuomianbangmaosuojianju', '工作面帮锚索排距': 'gongzuomianbangmaosuopaiju', '工作面帮锚索钢带类型': 'gongzuomianbangmaosuogangdaileixing', '工作面帮锚索钢带宽度': 'gongzuomianbangmaosuogangdaikuandu', '工作面帮锚索钢带长度': 'gongzuomianbangmaosuogangdaichangdu', '工作面帮锚索钢带厚度': 'gongzuomianbangmaosuogangdaihoudu', '工作面帮网类型': 'gongzuomianbangwangleixing', '工作面帮网铁丝直径': 'gongzuomianbangwangtiesizhijing', '煤柱帮锚杆类型': 'meizhubangmaoganleixing', '煤柱帮锚杆杆体强度': 'meizhubangmaogangantiqiangdu', '煤柱帮锚杆直径': 'meizhubangmaoganzhijing', '煤柱帮锚杆长度': 'meizhubangmaoganchangdu', '煤柱帮锚杆钻孔直径': 'meizhubangmaoganzuankongzhijing', '煤柱帮锚杆间距': 'meizhubangmaoganjianju', '煤柱帮锚杆排距': 'meizhubangmaoganpaiju', '煤柱帮锚杆钢带类型': 'meizhubangmaogangangdaileixing', '煤柱帮锚杆钢带宽度': 'meizhubangmaogangangdaikuandu', '煤柱帮锚杆钢带长度': 'meizhubangmaogangangdaichangdu', '煤柱帮锚杆钢带厚度': 'meizhubangmaogangangdaihoudu', '煤柱帮锚索类型': 'meizhubangmaosuoleixing', '煤柱帮锚索杆体强度': 'meizhubangmaosuogantiqiangdu', '煤柱帮锚索直径': 'meizhubangmaosuozhijing', '煤柱帮锚索长度': 'meizhubangmaosuochangdu', '煤柱帮锚索钻孔直径': 'meizhubangmaosuozuankongzhijing', '煤柱帮锚索间距': 'meizhubangmaosuojianju', '煤柱帮锚索排距': 'meizhubangmaosuopaiju', '煤柱帮锚索钢带类型': 'meizhubangmaosuogangdaileixing', '煤柱帮锚索钢带宽度': 'meizhubangmaosuogangdaikuandu', '煤柱帮锚索钢带长度': 'meizhubangmaosuogangdaichangdu', '煤柱帮锚索钢带厚度': 'meizhubangmaosuogangdaihoudu', '煤柱帮网类型': 'meizhubangwangleixing', '煤柱帮网铁丝直径': 'meizhubangwangtiesizhijing', '钢棚型号': 'gangpengxinghao', '钢棚间距': 'gangpengjianju', '喷浆材料': 'penjiangcailiao', '喷浆厚度': 'penjianghoudu'}
 # 根据类型分类 （类型存在，该类型的描述字段才存在）
 yucecanshu_clt = {
     '支护形式': [],
@@ -196,4 +225,4 @@ yucecanshu_clt = {
     '钢棚型号': ['钢棚间距'],
     '喷浆材料': ['喷浆厚度']
 }
-
+yucecanshu_oth_val = []
