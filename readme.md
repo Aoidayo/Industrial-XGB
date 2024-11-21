@@ -16,3 +16,7 @@ Zmj
  |-- env.yml        # 环境文件
  |-- readme.md 
 ```
+
+环境
+conda create -n ml-framework python=3.11
+requirement.txt

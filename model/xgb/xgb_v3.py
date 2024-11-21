@@ -46,6 +46,7 @@ class XGB:
         self.yucecanshu = yucecanshu
         self.l_yucecanshu = len(yucecanshu)
         self.yucecanshu_range = yucecanshu_range
+        self.yucecanshu_str = list(yucecanshu_clt.keys())
         # 转换
         self.yucecanshu2py = yucecanshu2py
 
@@ -91,7 +92,7 @@ class XGB:
     def _add_y(self, zhihu_data: pd.DataFrame) -> None:
         for _ in self.yucecanshu:
             lst = []
-            if (_.endswith("类型") or _ == '支护形式' or _ == '钢棚型号' or _ == '喷浆材料'):
+            if (_ in self.yucecanshu_str):
                for _type in zhihu_data[_]:
                     code = self.yucecanshu_range[_].index(_type) if _type in self.yucecanshu_range[_] else missing   # 缺失
                     lst.append(code)
@@ -128,7 +129,7 @@ class XGB:
         xgb_dict, choose_dict = {}, {}
         for _ in self.yucecanshu:
             print(_)
-            if (_.endswith("类型") or _ == '支护形式' or _ == '钢棚型号' or _ == '喷浆材料'):
+            if (_ in self.yucecanshu_str):
                 choose = self.y[_] != missing
                 _x = self.x[choose, :]
                 _y = self.y[_][choose]
@@ -147,7 +148,7 @@ class XGB:
         # 计算损失
         for _ in self.yucecanshu:
             _y = xgb_dict[_].predict(self.x[choose_dict[_], :])
-            if (_.endswith("类型") or _ == '支护形式' or _ == '钢棚型号' or _ == '喷浆材料'):
+            if (_ in list(self.yucecanshu_str)):
                 accuracy = sum(1 if _yc == _yp else 0 for _yc, _yp in zip(self.y[_][choose_dict[_]], _y)) / len(_y)
                 log_info.append("{} accuracy : {}".format(_, accuracy))
                 with open(self.log_path, 'a', encoding='utf-8') as f:
@@ -157,7 +158,6 @@ class XGB:
                 log_info.append("{} rmse : {}".format(_, _rmse))
                 with open(self.log_path, 'a', encoding='utf-8') as f:
                     f.write("{} rmse : {} <br/>".format(_, _rmse))
-
         # 画出参数重要性
         # params_importance = dict(sorted(self._get_labeled_importance(xgb_dict['支护形式'].fit(self.x, self.y['支护形式']))
         #                                  .items(), key=lambda _: _[1], reverse=True))
@@ -165,7 +165,6 @@ class XGB:
         # self._draw_importance(params_importance, impGraph_path)
         # log_info.append("<img style='width: 100%; height: 100%' src='http://127.0.0.1:9000/ruoyi/aiplat/importance/{}'>"
         #               .format(impGraph_path[impGraph_path.rfind('/') + 1:]))
-        print(' <br/>'.join(log_info))
         return ' <br/>'.join(log_info)
 
     # 预测
@@ -203,67 +202,12 @@ class XGB:
                 else:
                     val *= 1 - eps_zhihu
                     res[_param] = val_range[min(bisect.bisect_left(val_range, val), len(val_range) - 1)]
-        # 8.回采巷道没有喷浆
-        if (raw_x['巷道用途'] == '回采巷道'):
-            res['喷浆材料'] = none_exist
-        # 9.煤柱帮应有锚杆
-        if (res['煤柱帮锚杆类型'] == none_exist):
-            res['煤柱帮锚杆类型'] = meizhubangmaoganleixing[random.randint(0, len(meizhubangmaoganleixing) - 1)]
-        if (raw_x['巷道埋深'] >= 1000):
-            # 7.如果巷道埋深超过1000的
-            # 则满足下面条件
-            # 锚杆直径22、钢号500 - 600、锚杆间距700 - 800、锚杆排距700 - 800、锚索直径21.8、
-            # 锚索间距1400 - 1600、锚索排距1400 - 1600
-            for _param, _param_lst in hangdaomaishen_extreme.items():
-                if (_param.endswith('锚索间距') or _param.endswith('锚索排距')):
-                    res[_param] = res[_param.replace('索', '杆')] << 1
-                else:
-                    res[_param] = _param_lst[random.randint(0, len(_param_lst) - 1)]
-        for _key, _param_lst in yucecanshu_clpc.items():
-            if (_key.endswith('排距')):
-                # 2.顶锚杆排距 = 工作面帮锚杆排距 = 煤柱帮锚杆排距（min）
-                #   顶锚索排距 = 工作面帮锚索排距 = 工作面帮锚索排距（min）
-                mn = float('INF')
-                for _param in _param_lst:
-                    mn = min(mn, res[_param])
-                for _param in _param_lst:
-                    res[_param] = mn
-            elif (_key.endswith('长度') or _key.endswith('直径')):
-                # 3.顶锚杆长度 = 工作面帮锚杆长度 = 煤柱帮锚杆长度（max）
-                # 顶锚索长度 = 工作面帮锚索长度 = 煤柱帮锚索长度（max）
-                # 顶锚索直径 = 工作面帮锚索直径 = 煤柱帮锚索直径（max）
-                mx = -float('INF')
-                for _param in _param_lst:
-                    mx = max(mx, res[_param])
-                for _param in _param_lst:
-                    res[_param] = mx
-        # 顶锚杆直径 = max(顶锚杆直径, 工作面帮锚杆直径, 煤柱帮锚杆直径)
-        res['顶锚杆直径'] = max(res['顶锚杆直径'], res['工作面帮锚杆直径'], res['煤柱帮锚杆直径'])
-        # 4.煤柱帮锚索长度 <= 煤柱宽度（mm）
-        res['煤柱帮锚索长度'] = min(res['煤柱帮锚索长度'], raw_x['煤柱宽度'] * 1000)
-        if (res['工作面帮网类型'] != none_exist and res['煤柱帮网类型'] != none_exist and res['工作面帮网类型'] != res['煤柱帮网类型']):
-            # 5.工作面帮网类型 = 煤柱帮网类型
-            res['煤柱帮网类型'] = res['工作面帮网类型']
 
-        if (raw_x['巷道埋深'] >= 400):
-            # 6.顶板锚杆直径>=22且埋深超过400时要有金属网
-            if (res['顶锚杆类型'] == none_exist):
-                res['顶锚杆类型'] = '左旋无纵筋螺纹钢锚杆' if random.randint(0,1) else '左旋纵筋螺纹钢锚杆(树脂锚杆)'
-            if (res['顶锚杆直径'] >= 22 and res['顶板网类型'] == none_exist):
-                res['顶板网类型'] = '钢筋网' if random.randint(0,1) else '菱形金属网'
-        #10 除（回采巷道、胶带运输巷、轨道运输巷、开切眼）外，煤柱帮的值赋值给工作面帮
-        if (raw_x['巷道用途'] in huicaihangdao):
-            for _yucecanshu in yucecanshu[::-1]:
-                if (_yucecanshu.startswith('工作面帮')):
-                    res[_yucecanshu] = res[_yucecanshu.replace('工作面帮', '煤柱帮')]
-        #11 工作面帮不需要锚索
-        res['工作面帮锚索类型'] = none_exist
         # 处理参数不存在的情况
         for _type, _param_lst in yucecanshu_clt.items():
             if (res[_type] == none_exist):
                 for _param in _param_lst:
                     res[_param] = -2
-        # print(res_py)
         print(res, len(res))
         res_py = {}
         for _k, _v in res.items():
