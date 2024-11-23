@@ -8,7 +8,7 @@ import pickle
 
 from xgboost import XGBClassifier, XGBRegressor
 
-from utils.config_test import *
+from utils.config import *
 from utils.utils import rmse, mkdir
 
 # # 解决中文乱码问题
@@ -83,6 +83,8 @@ class XGB:
             lst = []
             if (_ in self.yucecanshu_str):
                for _type in data[_]:
+                    if (_type != none_exist):
+                       _type = str(_type)
                     code = self.yucecanshu_range[_].index(_type) if _type in self.yucecanshu_range[_] else missing   # 缺失
                     lst.append(code)
                # print(_, list(set(lst)), max(list(set(lst))))
@@ -104,7 +106,7 @@ class XGB:
         mkdir(self.data_path + "model/" + task_id)
         self.model_path = self.data_path + "model/{}/{}.pkl".format(task_id, task_id)
         self.log_path = self.data_path + "model/{}/{}.log".format(task_id, task_id)
-        if os.path.exists(self.log_path):
+        if (os.path.exists(self.log_path)):
             os.remove(self.log_path)
         # impGraph_path = self.data_path + "model/{}/xgb.jpg".format(task_id)
         # 模型参数
@@ -197,7 +199,7 @@ class XGB:
             assert val >= 0
             print(_param, val)
             if (val in val_range):
-                res[_param] = val
+                res[_param] = val_range[val_range.index(val)]
             elif (_param.endswith('距')):
                 val *= 1 + eps
                 res[_param] = val_range[max(bisect.bisect_left(val_range, val) - 1, 0)]
