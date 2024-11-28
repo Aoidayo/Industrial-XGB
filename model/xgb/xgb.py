@@ -8,7 +8,7 @@ import pickle
 
 from xgboost import XGBClassifier, XGBRegressor
 
-from utils.config import *
+from utils.config_test import *
 from utils.utils import rmse, mkdir
 
 # # 解决中文乱码问题
@@ -34,7 +34,7 @@ class XGB:
         self.yucecanshu = list(yucecanshu_range.keys())
         self.l_yucecanshu = len(self.yucecanshu)
         self.yucecanshu_range = yucecanshu_range
-
+        # 转换
         self.yucecanshu2py = yucecanshu2py
         self.yucecanshu_clt = yucecanshu_clt
         self.yucecanshu_str = list(yucecanshu_clt.keys())
@@ -139,7 +139,7 @@ class XGB:
         # 计算损失
         for _ in self.yucecanshu:
             _y = xgb_dict[_].predict(self.x[choose_dict[_], :])
-            if (_ in list(self.yucecanshu_str)):
+            if (_ in self.yucecanshu_str):
                 accuracy = sum(1 if _yc == _yp else 0 for _yc, _yp in zip(self.y[_][choose_dict[_]], _y)) / len(_y)
                 log_info.append("{} accuracy : {}".format(_, accuracy))
                 with open(self.log_path, 'a', encoding='utf-8') as f:
