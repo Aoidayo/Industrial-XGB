@@ -10,11 +10,15 @@ ml-framework
  |    |    |-- xgb  # 算法xgb的模型文件夹
  |-- model  # 算法文件夹
  |    |-- xgb   # 算法xgb的文件夹
- |    |    |-- xgb_v3.py    # 算法xgbv3
+ |    |    |-- xgb.py    # 算法xgbv3
+ |    |    |-- config.py # input / predict config; 与data.csv保持同一
  |-- utils  # 工具文件夹
- |    |-- config.py # 配置项
- |    |-- config_test.py    # 测试配置项
  |    |-- utils.py  # 常用工具
+ |    |-- Processor  
+ |    |    |-- JFProcessor.py #  将甲方en输入处理为模型预测zh输入; filter unnecessary JF_input ; 
+ |    |    |-- PredictPostProcessor.py #  将模型预测zh输出处理为甲方需要的en输出; 预置甲方规则**硬编码** 
+ |    |    |-- JFProcessorConfig.py 
+ |    |    |-- PredictPostProcessorConfig.py 
  |-- .gitignore
  |-- env.yml        # 环境文件
  |-- main.py    # 主启动代码    
@@ -25,9 +29,18 @@ ml-framework
 ```
 
 # 环境
+~~什么年代了, 还conda呢?~~
+替换:
+- miniforge: https://github.com/conda-forge/miniforge/releases
+  - 推荐miniforge, 可以和conda混用, 支持pycharm调试
+- micromamba : https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html#windows
+  - 如果只在linux环境下使用, 且不要求调试, 可选择这个 
 ```bash
-conda install pytorch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 pytorch-cuda=12.1 -c pytorch -c nvidia
-conda create -n ml-framework python=3.11
+mamba create -n ml-framework python=3.11
+mamba config set custom_channels.pytorch https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/
+mamba config set custom_channels.nvidia https://mirrors.cernet.edu.cn/anaconda-extra/cloud/
+mamba install pytorch-cuda=12.1 -c pytorch -c nvidia
+mamba install pytorch=2.4.0=py3.11_cuda12.1_cudnn9_0 
 pip install -r requirements.txt
 ```
 
